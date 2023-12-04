@@ -115,6 +115,8 @@ def main():
         q_video = device.getOutputQueue(name="video", maxSize=4, blocking=False)
         arm_status = ""
 
+        # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
+
         while True:
             in_video = (
                 q_video.get()
@@ -163,14 +165,15 @@ def main():
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
 
             # Display the status on the image.
+            # Display the status on the image.
             cv2.putText(
                 image,
                 final_status,
-                (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 255, 0),
-                2,
+                (10, 30),  # Position of the text
+                cv2.FONT_HERSHEY_SIMPLEX,  # Font style
+                1.5,  # Font scale (1.5 is larger than the default 1)
+                (0, 0, 255),  # Font color in BGR (red)
+                3,  # Font thickness
                 cv2.LINE_AA,
             )
 
