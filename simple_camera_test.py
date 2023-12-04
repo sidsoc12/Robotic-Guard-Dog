@@ -1,7 +1,7 @@
 import cv2
 
 # Test with different indices if 0 does not work.
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(10)
 
 while True:
     ret, frame = cap.read()
