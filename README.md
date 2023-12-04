@@ -34,3 +34,9 @@ OpenCV with Pre-trained Deep Learning Models:
 Pros: OpenCV is widely used, well-documented, and supports a variety of languages and platforms. You can leverage pre-trained deep learning models for pose estimation.
 Cons: The real-time performance might not be as optimized as MediaPipe or TensorFlow Lite, and it could require more effort to integrate deep learning models.
 
+
+Forward/Inverse Kinematics:
+When Pupper:
+Ultimately, Pupper should use inverse kinematics to go towards a crouch position when detecting a harmful thread. It can react normally when seeing a regular person. 
+
+
