@@ -13,39 +13,49 @@ hands = mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5
 drawing_spec = mp_drawing.DrawingSpec(thickness=2, circle_radius=1)
 
 
+def calculate_angle(a, b, c):
+    a = np.array(a)  # First
+    b = np.array(b)  # Mid
+    c = np.array(c)  # End
+
+    radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(
+        a[1] - b[1], a[0] - b[0]
+    )
+    angle = np.abs(radians * 180.0 / np.pi)
+
+    if angle > 180.0:
+        angle = 360 - angle
+
+    return angle
+
+
 def is_fist_clenched(hand_landmarks):
-    # Assuming a simple heuristic where we check if the fingertips are close to the base of the index finger.
-    # This will need refinement based on your specific requirements.
-    clenched_threshold = (
-        0.3  # Threshold for how close fingertips should be to the palm base.
-    )
+    # Check if the fist is clenched based on the angles of the finger joints
+    clenched_fist_angle_threshold = 160  # Angle threshold, this might need tuning
 
-    # Get the base of the palm.
-    wrist = np.array(
-        [
-            hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].x,
-            hand_landmarks.landmark[mp_hands.HandLandmark.WRIST].y,
-        ]
-    )
-
-    # Check each fingertip's proximity to the wrist.
-    for fingertip in [
-        mp_hands.HandLandmark.INDEX_FINGER_TIP,
-        mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
-        mp_hands.HandLandmark.RING_FINGER_TIP,
-        mp_hands.HandLandmark.PINKY_TIP,
+    # Loop through each finger
+    for finger in [
+        mp_hands.HandLandmark.THUMB_MCP,
+        mp_hands.HandLandmark.INDEX_FINGER_MCP,
+        mp_hands.HandLandmark.MIDDLE_FINGER_MCP,
+        mp_hands.HandLandmark.RING_FINGER_MCP,
+        mp_hands.HandLandmark.PINKY_MCP,
     ]:
-        finger_tip = np.array(
-            [hand_landmarks.landmark[fingertip].x, hand_landmarks.landmark[fingertip].y]
-        )
-        # Calculate distance from wrist to fingertip.
-        distance = np.linalg.norm(finger_tip - wrist)
+        # Calculate the angle for the finger base joint
+        if finger != mp_hands.HandLandmark.THUMB_MCP:  # Skip the thumb MCP
+            joint_base = hand_landmarks.landmark[finger]
+            joint_mid = hand_landmarks.landmark[finger + 1]
+            joint_tip = hand_landmarks.landmark[finger + 2]
 
-        # If the distance is greater than the threshold, the fist is likely not clenched.
-        if distance > clenched_threshold:
-            return False
+            angle = calculate_angle(
+                [joint_base.x, joint_base.y],
+                [joint_mid.x, joint_mid.y],
+                [joint_tip.x, joint_tip.y],
+            )
 
-    # If all fingertips are within the threshold distance, the fist is likely clenched.
+            if angle > clenched_fist_angle_threshold:
+                return False
+
     return True
 
 
