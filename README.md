@@ -19,3 +19,18 @@ Milestone 0: Set up the development environment.
 Milestone 1: Building off existing computer vision framework, incorporate detection for open- and closed-armed poses, printing output
 
 Milestone 2: Develop pupper response stances according to detected poses. 
+
+
+
+CV:
+CV:
+MediaPipe:
+Pros: MediaPipe is particularly well-suited for real-time applications and is optimized for performance. It's easy to use and can be integrated into various platforms. MediaPipe Pose can accurately track body postures in real-time, which aligns well with your need to differentiate between threatening and non-threatening poses.
+Cons: The level of customization might be limited compared to more flexible deep learning frameworks like TensorFlow or PyTorch.
+TensorFlow Lite with PoseNet:
+Pros: TensorFlow Lite is optimized for mobile and edge devices, which might be ideal for the hardware constraints of the Pupper robot. PoseNet can run in real-time and is efficient in detecting human poses.
+Cons: It might require more setup and tuning compared to MediaPipe, and the overall accuracy could vary depending on the model you choose and its configuration.
+OpenCV with Pre-trained Deep Learning Models:
+Pros: OpenCV is widely used, well-documented, and supports a variety of languages and platforms. You can leverage pre-trained deep learning models for pose estimation.
+Cons: The real-time performance might not be as optimized as MediaPipe or TensorFlow Lite, and it could require more effort to integrate deep learning models.
+
