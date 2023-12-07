@@ -1,0 +1,39 @@
+'''
+You have to call this function before you can use the other functions, after defining the object pupper=Pupper().
+'''
+def wakeup(self):
+'''
+only slow stand from bottom position (clarify what the default position is)
+'''
+def slowStand(self):
+def is_blocked(self):
+'''
+The Pupper rests by returning to its sleeping position. It deactivates at the end.
+'''
+def rest(self):
+'''
+The Pupper naps but does not deactivate
+'''
+def nap(self):
+'''
+The Pupper turns left with positive angle. Angle is in radians and speed is in
+radians / s. BehaviorState is an enum that can be BehaviorState.TROT or BehaviorState.WALK.
+'''
+def turn(self, angle, speed, behavior=BehaviorState.TROT):
+def forward(self, distance, speed, behavior=BehaviorState.TROT):
+'''
+The Pupper can turn for time in seconds (s)
+'''
+def turn_for_time(self, duration, speed, behavior=BehaviorState.TROT):
+'''
+The Pupper moves forward for time in seconds (s) at a specified speed [0, 1]
+'''
+def nod(self):
+'''
+The Pupper nods its head up and down
+'''
+def forward_for_time(self, duration, speed, behavior=BehaviorState.TROT):
+def move_until_blocked(self, speed, behavior=BehaviorState.TROT):
+# sit down
+def slowRest(self):
+
