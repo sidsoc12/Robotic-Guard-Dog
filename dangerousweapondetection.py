@@ -1,6 +1,7 @@
 import cv2
 import torch
 import mediapipe as mp
+import os
 
 
 # Path to the YOLOv5 weights file
@@ -17,10 +18,7 @@ pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
 # Define weapon classes
 weapon_classes = [
-    "watch",
-    "knife",
-    "gun",
-    "phone",
+    "cell phone",
 ]  # Add or modify based on YOLO model training
 
 
@@ -44,8 +42,8 @@ def main():
         for detection in results.xyxy[0].numpy():
             class_id = int(detection[-1])
             class_name = model.names[class_id]
+            print(class_name)
             if class_name in weapon_classes:
-                print("Found Weaponq)
                 weapon_detected = True
                 x1, y1, x2, y2 = map(int, detection[:4])
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
@@ -58,6 +56,9 @@ def main():
                     (0, 0, 255),
                     2,
                 )
+                threat_level = "medium"  # Example variable
+                message = f"Harmful threat detected with {threat_level} risk, pupper now engaging in defensive pose after seeing {class_name}"
+                os.system(f'say "{message}"')
 
         # Process the frame with MediaPipe Pose
         results_pose = pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
