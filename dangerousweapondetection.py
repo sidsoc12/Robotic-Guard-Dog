@@ -16,9 +16,13 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
+# some reason YOLO thinks a screwdriver is a scissor so know that when it recognizes scissors, it is really recognizing a screwdriver and maybe also a real scissor
 # Define weapon classes
 weapon_classes = [
     "cell phone",
+    "scissors",
+    "knife",
+    "stick",
 ]  # Add or modify based on YOLO model training
 
 
@@ -56,9 +60,10 @@ def main():
                     (0, 0, 255),
                     2,
                 )
+                voice = "Alex"  # Example of a macOS system voice
                 threat_level = "medium"  # Example variable
                 message = f"Harmful threat detected with {threat_level} risk, pupper now engaging in defensive pose after seeing {class_name}"
-                os.system(f'say "{message}"')
+                os.system(f'say -v {voice} "{message}"')
 
         # Process the frame with MediaPipe Pose
         results_pose = pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
