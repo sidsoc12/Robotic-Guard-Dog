@@ -9,9 +9,6 @@ weights_path = "yolov5s.pt"  # Adjust if your weights file is in a different dir
 # Load the pre-trained YOLOv5 model from the local weights file
 model = torch.hub.load("yolov5", "custom", path=weights_path, source="local")
 
-# Rest of your code (MediaPipe setup, video capture, etc.)
-# ...
-
 
 # Initialize MediaPipe solutions
 mp_drawing = mp.solutions.drawing_utils
