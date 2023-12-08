@@ -169,9 +169,10 @@ def main():
                 #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
                 # )
             else:
-                status_text = "Pupper is Safe"
                 if arm_status == "Arms Out":
                     status_text = "Harmful threat detected"
+                else:
+                    status_text = "Pupper is Safe"
 
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
             print(final_status)
