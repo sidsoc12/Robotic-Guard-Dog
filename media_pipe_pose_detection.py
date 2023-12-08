@@ -119,7 +119,7 @@ def main():
         # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
 
         while True:
-            print("LMAO PI")
+            print("looped")
             in_video = (
                 q_video.get()
             )  # blocking call, will wait until a new data has arrived
@@ -144,6 +144,7 @@ def main():
                 arm_status = check_arms_out(
                     results_pose.pose_landmarks.landmark, image.shape[1]
                 )
+                print("DRAWING POSE ANNOTATION")
 
             # Check if hands are clenched.
             hands_clenched = False
@@ -156,9 +157,10 @@ def main():
             # Combine the checks for arms out and hands clenched for the final status.
             if hands_clenched:
                 status_text = "Harmful threat detected"
-                os.system(
-                    'say "Harmful threat detected, pupper now engaging in defensive pose"'
-                )
+                print("Harmful threat detected, hands clenched")
+                # os.system(
+                #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
+                # )
             else:
                 status_text = "Pupper is Safe"
                 if arm_status == "Arms Out":
