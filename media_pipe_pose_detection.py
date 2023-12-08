@@ -157,7 +157,6 @@ def main():
             # Combine the checks for arms out and hands clenched for the final status.
             if hands_clenched:
                 status_text = "Harmful threat detected"
-                print("Harmful threat detected, hands clenched")
                 # os.system(
                 #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
                 # )
@@ -167,7 +166,7 @@ def main():
                     status_text = "Harmful threat detected"
 
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
-
+            print(final_status)
             # Display the status on the image.
             # Display the status on the image.
             cv2.putText(
