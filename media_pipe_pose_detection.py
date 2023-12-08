@@ -1,6 +1,8 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+from StanfordQuadruped import karelPupper
+from time import sleep
 
 # import pyttsx3
 
@@ -109,6 +111,11 @@ def create_pipeline():
 
 def main():
     pipeline = create_pipeline()
+    myPup = karelPupper.Pupper()
+    myPup.wakeup()
+    sleep(1)
+    print("started")
+    myPup.slowStand()
 
     # Start the pipeline
     with dai.Device(pipeline) as device:
@@ -160,6 +167,7 @@ def main():
                 # os.system(
                 #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
                 # )
+                myPup.nod()
             else:
                 status_text = "Pupper is Safe"
                 if arm_status == "Arms Out":
