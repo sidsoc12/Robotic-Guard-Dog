@@ -10,6 +10,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 mp_hands = mp.solutions.hands
 
+
 # # Initialize text-to-speech engine
 # engine = pyttsx3.init()
 
@@ -124,7 +125,7 @@ def main():
         arm_status = ""
 
         # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
-
+        current_state = "stand"
         while True:
             print("looped")
             in_video = (
@@ -167,11 +168,14 @@ def main():
                 # os.system(
                 #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
                 # )
-                myPup.nod()
+                myPup.nap()
             else:
                 status_text = "Pupper is Safe"
                 if arm_status == "Arms Out":
                     status_text = "Harmful threat detected"
+                    myPup.nap()
+                else:
+                    myPup.slowStand()
 
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
             print(final_status)
