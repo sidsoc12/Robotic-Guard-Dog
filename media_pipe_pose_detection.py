@@ -144,15 +144,15 @@ def main():
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            # Draw the pose annotation on the image.
-            if results_pose.pose_landmarks:
-                mp_drawing.draw_landmarks(
-                    image, results_pose.pose_landmarks, mp_pose.POSE_CONNECTIONS
-                )
-                arm_status = check_arms_out(
-                    results_pose.pose_landmarks.landmark, image.shape[1]
-                )
-                print("DRAWING POSE ANNOTATION")
+            # # Draw the pose annotation on the image.
+            # if results_pose.pose_landmarks:
+            #     mp_drawing.draw_landmarks(
+            #         image, results_pose.pose_landmarks, mp_pose.POSE_CONNECTIONS
+            #     )
+            #     arm_status = check_arms_out(
+            #         results_pose.pose_landmarks.landmark, image.shape[1]
+            #     )
+            #     print("DRAWING POSE ANNOTATION")
 
             # Check if hands are clenched.
             hands_clenched = False
@@ -177,21 +177,23 @@ def main():
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
             print(final_status)
             if status_text == "Harmful threat detected":
-                myPup.nap()
-            else:
                 myPup.slowStand()
+            else:
+                myPup.nod()
+                myPup.nap()
+
             # Display the status on the image.
             # Display the status on the image.
-            cv2.putText(
-                image,
-                final_status,
-                (10, 30),  # Position of the text
-                cv2.FONT_HERSHEY_SIMPLEX,  # Font style
-                1.5,  # Font scale (1.5 is larger than the default 1)
-                (0, 0, 255),  # Font color in BGR (red)
-                3,  # Font thickness
-                cv2.LINE_AA,
-            )
+            # cv2.putText(
+            #     image,
+            #     final_status,
+            #     (10, 30),  # Position of the text
+            #     cv2.FONT_HERSHEY_SIMPLEX,  # Font style
+            #     1.5,  # Font scale (1.5 is larger than the default 1)
+            #     (0, 0, 255),  # Font color in BGR (red)
+            #     3,  # Font thickness
+            #     cv2.LINE_AA,
+            # )
 
             # Show the image.
             # cv2.imshow("MediaPipe Pose and Hands", image)
