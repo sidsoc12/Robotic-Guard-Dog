@@ -168,17 +168,17 @@ def main():
                 # os.system(
                 #     'say "Harmful threat detected, pupper now engaging in defensive pose"'
                 # )
-                myPup.nap()
             else:
                 status_text = "Pupper is Safe"
                 if arm_status == "Arms Out":
                     status_text = "Harmful threat detected"
-                    myPup.nap()
-                else:
-                    myPup.slowStand()
 
             final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
             print(final_status)
+            if status_text == "Harmful threat detected":
+                myPup.nap()
+            else:
+                myPup.slowStand()
             # Display the status on the image.
             # Display the status on the image.
             cv2.putText(
