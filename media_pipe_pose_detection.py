@@ -97,7 +97,7 @@ import depthai as dai
 def create_pipeline():
     pipeline = dai.Pipeline()
     cam_rgb = pipeline.createColorCamera()
-    cam_rgb.setBoardSocket(dai.CameraBoardSocket.RGB)
+    cam_rgb.setBoardSocket(dai.CameraBoardSocket.CAM_A)
     cam_rgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
 
     xout_video = pipeline.createXLinkOut()
@@ -119,6 +119,7 @@ def main():
         # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
 
         while True:
+            print("LMAO PI")
             in_video = (
                 q_video.get()
             )  # blocking call, will wait until a new data has arrived
@@ -179,7 +180,7 @@ def main():
             )
 
             # Show the image.
-            cv2.imshow("MediaPipe Pose and Hands", image)
+            # cv2.imshow("MediaPipe Pose and Hands", image)
 
             # Break the loop when 'q' is pressed.
             if cv2.waitKey(5) & 0xFF == ord("q"):
