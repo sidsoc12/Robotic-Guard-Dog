@@ -2,9 +2,9 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from StanfordQuadruped import karelPupper
-from time import sleep
+import time
 
-# import pyttsx3
+import pyttsx3
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -15,7 +15,7 @@ mp_hands = mp.solutions.hands
 # engine = pyttsx3.init()
 
 # Initialize pose and hands models.
-pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.7)
 hands = mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 # Prepare DrawingSpec for drawing the landmarks later.
 drawing_spec = mp_drawing.DrawingSpec(thickness=2, circle_radius=1)
@@ -109,14 +109,30 @@ def create_pipeline():
 
     return pipeline
 
+def speak_statement(engine, statment):
+    engine.say(statement) 
+    engine.runAndWait()
+    engine.stop() 
 
 def main():
     pipeline = create_pipeline()
     myPup = karelPupper.Pupper()
     myPup.wakeup()
-    sleep(1)
+    time.sleep(0.2)
     print("started")
     myPup.slowStand()
+
+    #initilaize text to speech engine
+    engine = pyttsx3.init()
+    engine.setProperty("rate", 150)
+    engine.setProperty("volume", 0.9)
+   
+    # engine.say("Hello, I am your robotic guard dog, Tin") 
+    
+    # engine.runAndWait()
+    # engine.stop() 
+
+    speak_statement(engine, "Hello, I am your robotic guard dog, Tin")
 
     # Start the pipeline
     with dai.Device(pipeline) as device:
@@ -126,12 +142,17 @@ def main():
 
         # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
         current_state = "stand"
+        status_text = "Pupper is Safe"
         while True:
             print("looped")
-            in_video = (
-                q_video.get()
-            )  # blocking call, will wait until a new data has arrived
-            frame = in_video.getCvFrame()
+            try:
+                in_video = (
+                    q_video.get()
+                )  # blocking call, will wait until a new data has arrived
+                frame = in_video.getCvFrame()
+            except Exception as e:
+                print(e)
+                continue
 
             # Flip the image horizontally for a later selfie-view display, and convert the BGR image to RGB.
             image = cv2.cvtColor(cv2.flip(frame, 1), cv2.COLOR_BGR2RGB)
@@ -144,15 +165,15 @@ def main():
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            # # Draw the pose annotation on the image.
-            # if results_pose.pose_landmarks:
-            #     mp_drawing.draw_landmarks(
-            #         image, results_pose.pose_landmarks, mp_pose.POSE_CONNECTIONS
-            #     )
-            #     arm_status = check_arms_out(
-            #         results_pose.pose_landmarks.landmark, image.shape[1]
-            #     )
-            #     print("DRAWING POSE ANNOTATION")
+            # Draw the pose annotation on the image.
+            if results_pose.pose_landmarks:
+                # mp_drawing.draw_landmarks(
+                #     image, results_pose.pose_landmarks, mp_pose.POSE_CONNECTIONS
+                # )
+                arm_status = check_arms_out(
+                    results_pose.pose_landmarks.landmark, image.shape[1]
+                )
+                #print("DRAWING POSE ANNOTATION")
 
             # Check if hands are clenched.
             hands_clenched = False
@@ -174,13 +195,21 @@ def main():
                 else:
                     status_text = "Pupper is Safe"
 
-            final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
-            print(final_status)
+            # final_status = f"Status: {status_text} | Arm Status: {arm_status} | Hands Clenched: {hands_clenched}"
+            states = [status_text, arm_status, hands_clenched]
+            print(states)
+            print(current_state)
             if status_text == "Harmful threat detected":
-                myPup.slowStand()
+                if current_state == "sit":
+                    myPup.slowStand()
+                    print("finished standing")
+                current_state = "stand"
             else:
-                myPup.nod()
-                myPup.nap()
+                if(current_state == "stand"):
+                    myPup.nod()
+                    myPup.nap()
+                    print("finished sitting")
+                    current_state = "sit"
 
             # Display the status on the image.
             # Display the status on the image.
