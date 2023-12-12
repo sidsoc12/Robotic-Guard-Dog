@@ -109,7 +109,7 @@ def create_pipeline():
 
     return pipeline
 
-def speak_statement(engine, statment):
+def speak_statement(engine, statement):
     engine.say(statement) 
     engine.runAndWait()
     engine.stop() 
@@ -143,7 +143,10 @@ def main():
         # External Camera gets frames -> make it into cv frame -> covert that to image -> then run opencv models on image
         current_state = "stand"
         status_text = "Pupper is Safe"
+        old_threats = []
+
         while True:
+            threats = []
             print("looped")
             try:
                 in_video = (
@@ -181,6 +184,7 @@ def main():
                 for hand_landmarks in results_hands.multi_hand_landmarks:
                     if is_fist_clenched(hand_landmarks):
                         hands_clenched = True
+                        threats.append("hands_clenched")
                         break
 
             # Combine the checks for arms out and hands clenched for the final status.
@@ -192,6 +196,7 @@ def main():
             else:
                 if arm_status == "Arms Out":
                     status_text = "Harmful threat detected"
+                    threats.append("arms_out")
                 else:
                     status_text = "Pupper is Safe"
 
@@ -210,6 +215,17 @@ def main():
                     myPup.nap()
                     print("finished sitting")
                     current_state = "sit"
+
+            if old_threats == threats:
+                continue
+            elif threats == ["arms_out"]:
+                speak_statement(engine, "Threat detected, arms are out")
+            elif threats == ["hands_clenched"]:
+                speak_statement(engine, "Threat detected, hands are clenched")
+            elif len(threats) == 2:
+                speak_statement(engine, "Threat detected, hands are clenched, arms are out")
+            elif threats == []:
+                speak_statement(engine, "Thank you for assuming a non-threatening position")
 
             # Display the status on the image.
             # Display the status on the image.
@@ -230,6 +246,7 @@ def main():
             # Break the loop when 'q' is pressed.
             if cv2.waitKey(5) & 0xFF == ord("q"):
                 break
+            old_threats = threats
 
         cv2.destroyAllWindows()
 

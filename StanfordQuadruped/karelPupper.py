@@ -191,7 +191,7 @@ class Pupper:
         startTime = time.time()
         last_loop = startTime
         command = Command(self.config.default_z_ref)
-        while cur <= -0.03: # equal here?
+        while cur <= 0.0: # equal here?
             if time.time() - last_loop >= self.config.dt:
                 command.height = orig + ((time.time() - startTime) / 2) * abs(target)
                 cur = command.height
